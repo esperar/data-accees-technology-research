@@ -17,9 +17,10 @@ import org.springframework.transaction.annotation.Transactional
 class UserRepository {
 
     fun selectUserById(userId: Long): User? =
-        UserTable.select(UserTable.userId eq userId)
-        .map { UserTable.toModel(it) }
-        .singleOrNull()
+        UserTable.select(UserTable.userId)
+            .where { UserTable.userId eq userId }
+            .map { UserTable.toModel(it) }
+            .singleOrNull()
 
     fun insertUser(request: UserProtocol.InsertUserRequest): Long =
         UserTable.insert {
@@ -39,7 +40,13 @@ class UserRepository {
             it[girlfriend] = girlfriendId
         }
 
+    /**
+     * UserTable.updateWhere {  }
+     */
+
 }
+
+
 
 fun UserTable.toModel(row: ResultRow): User {
     return User(
